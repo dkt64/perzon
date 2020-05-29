@@ -8,58 +8,74 @@
 import * as tf from "@tensorflow/tfjs";
 import * as tmImage from "@teachablemachine/image";
 
+// import axios from "axios";
+
 export default {
   name: "Perzon",
 
   data: () => ({
+    model_json: "",
+    metadata_json: "",
     model: null,
-    publicPath: process.env.BASE_URL,
   }),
   methods: {
     loadModel() {
-      //   const uploadModel = document.getElementById("upload-model");
-      //   const uploadWeights = document.getElementById("upload-weights");
-      //   const uploadMetadata = document.getElementById("upload-metadata");
-      // file_mode = new File()
-      this.model = tmImage
-        // .loadFromFiles(
-        //   uploadModel.files[0],
-        //   uploadWeights.files[0],
-        //   uploadMetadata.files[0]
-        // )
-        .loadFromFiles("model.json", "metadata.json", "weights.bin")
+      //
+      // Create model
+      //
+      tmImage
+        .load("http://localhost/api/v1/model", "http://localhost/api/v1/metadata")
         .then((mod) => {
           this.model = mod;
-          console.log("loaded model " + mod.name);
-          console.log("loaded model " + mod.getTotalClasses());
+          console.log("Created model " + mod.name);
         })
         .catch(function(error) {
-          console.log("loadLayersModel error");
+          console.log("tmImage load error");
           console.log(error);
         });
 
-      //   tmImage
-      //     .load(modelURL, metadataURL)
-      //     .then((mod) => {
-      //       this.model = mod;
-      //       console.log("loaded model " + mod.name);
-      //     })
-      //     .catch(function(error) {
-      //       console.log("loadLayersModel error");
-      //       console.log(error);
-      //     });
+      // //
+      // // Load Model file
+      // //
+      // axios
+      //   .get("/api/v1/model")
+      //   .then((response) => {
+      //     console.log("Model: ");
+      //     console.log(response.data);
+      //     this.model_json = response.data;
+      //     //
+      //     // Load Metadata file
+      //     //
+      //     axios
+      //       .get("/api/v1/metadata")
+      //       .then((response) => {
+      //         console.log("Metadata: ");
+      //         console.log(response.data);
+      //         this.metadata_json = response.data;
 
-      //   this.model = tf
-      //     .loadLayersModel(
-      //       "https://storage.googleapis.com/tfjs-models/tfjs/iris_v1/model.json"
-      //     )
-      //     .then((mod) => {
-      //       console.log("loaded model " + mod.name);
-      //     })
-      //     .catch(function(error) {
-      //       console.log("loadLayersModel error");
-      //       console.log(error);
-      //     });
+      //         //
+      //         // Create model
+      //         //
+      //         tmImage
+      //           .load(this.model_json, this.metadata_json)
+      //           .then((mod) => {
+      //             this.model = mod;
+      //             console.log("Created model " + mod.name);
+      //           })
+      //           .catch(function(error) {
+      //             console.log("tmImage load error");
+      //             console.log(error);
+      //           });
+      //       })
+      //       .catch(function(error) {
+      //         console.log("axios get /api/v1/metadata error");
+      //         console.log(error);
+      //       });
+      //   })
+      //   .catch(function(error) {
+      //     console.log("axios get /api/v1/model error");
+      //     console.log(error);
+      //   });
     },
   },
   mounted() {
